@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# alumbrera-web
 
-## Getting Started
+Frontend PWA para el portal de gestión Alumbrera. Construido con Next.js 16, shadcn/ui y autenticación via Microsoft Entra External ID (MSAL).
 
-First, run the development server:
+## Requisitos
+
+- Node.js 20+
+- pnpm 9+
+
+## Setup
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
+cp .env.example .env.local
+# Completar los valores en .env.local con las credenciales provistas por DevOps
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Variables de entorno
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Variable | Descripción |
+|---|---|
+| `NEXT_PUBLIC_AZURE_CLIENT_ID` | Client ID de la app registrada en Entra External ID |
+| `NEXT_PUBLIC_AZURE_AUTHORITY` | `https://<tenant>.ciamlogin.com/<tenant-id>` |
+| `NEXT_PUBLIC_AZURE_API_SCOPE` | `api://<api-client-id>/access_as_user` |
+| `NEXT_PUBLIC_API_BASE_URL` | URL base del backend (ej: `http://localhost:3001`) |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Desarrollo
 
-## Learn More
+```bash
+pnpm dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+La app corre en [http://localhost:3000](http://localhost:3000). El service worker está deshabilitado en modo desarrollo.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Tests E2E
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Los tests corren contra un build de producción:
 
-## Deploy on Vercel
+```bash
+pnpm build
+pnpm exec playwright test
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+El test de autenticación (`auth.spec.ts`) requiere `NEXT_PUBLIC_AZURE_CLIENT_ID` configurado en `.env.local` para no ser salteado.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Build de producción
+
+```bash
+pnpm build
+node .next/standalone/server.js
+```
+
+## Docker
+
+```bash
+docker build -t alumbrera-web .
+docker run -p 3000:3000 \
+  -e NEXT_PUBLIC_AZURE_CLIENT_ID=... \
+  -e NEXT_PUBLIC_AZURE_AUTHORITY=... \
+  -e NEXT_PUBLIC_AZURE_API_SCOPE=... \
+  -e NEXT_PUBLIC_API_BASE_URL=... \
+  alumbrera-web
+```
