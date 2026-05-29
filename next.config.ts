@@ -15,6 +15,7 @@ const withPWA = withPWAInit({
 const nextConfig: NextConfig = {
   output: "standalone",
   outputFileTracingRoot: process.cwd(),
+  turbopack: {},
 };
 
 export default withPWA(nextConfig);

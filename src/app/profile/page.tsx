@@ -22,7 +22,7 @@ function ProfileContent() {
   useEffect(() => {
     async function fetchProfile() {
       try {
-        const response = await apiFetch(instance, "/api/me");
+        const response = await apiFetch(instance, "/me");
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const data = await response.json();
         setProfile(data);
