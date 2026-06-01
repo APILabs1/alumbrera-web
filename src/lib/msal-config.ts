@@ -14,7 +14,7 @@ export const msalConfig: Configuration = {
     loggerOptions: {
       loggerCallback: (_level, message, containsPii) => {
         if (containsPii) return;
-        if (process.env.NODE_ENV === "development") {
+        if (process.env.NODE_ENV === "development" && typeof window !== "undefined") {
           console.log(message);
         }
       },

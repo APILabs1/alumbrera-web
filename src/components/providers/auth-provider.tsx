@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { MsalProvider, useMsal } from "@azure/msal-react";
 import {
   PublicClientApplication,
@@ -8,13 +9,13 @@ import {
   type AuthenticationResult,
 } from "@azure/msal-browser";
 import { msalConfig } from "@/lib/msal-config";
-import { apiFetch } from "@/lib/api-client";
 import { ReactNode } from "react";
 
 const msalInstance = new PublicClientApplication(msalConfig);
 
 function SyncOnLogin() {
   const { instance } = useMsal();
+  const router = useRouter();
 
   useEffect(() => {
     const callbackId = instance.addEventCallback(async (event) => {
@@ -33,9 +34,12 @@ function SyncOnLogin() {
         account.username;
 
       try {
-        await apiFetch(instance, "/users/sync", {
+        await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/sync`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${result.accessToken}`,
+          },
           body: JSON.stringify({
             oid: claims["oid"],
             email,
@@ -47,12 +51,14 @@ function SyncOnLogin() {
       } catch (err) {
         console.error("Post-login sync failed:", err);
       }
+
+      router.push("/profile");
     });
 
     return () => {
       if (callbackId) instance.removeEventCallback(callbackId);
     };
-  }, [instance]);
+  }, [instance, router]);
 
   return null;
 }
