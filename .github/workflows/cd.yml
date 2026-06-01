@@ -52,7 +52,7 @@ jobs:
 
       - name: Build & Push Docker image
         run: |
-          docker build -t $ACR/$IMAGE_NAME:${{ github.sha }} \
+          docker build --no-cache -t $ACR/$IMAGE_NAME:${{ github.sha }} \
             --build-arg NEXT_PUBLIC_AZURE_CLIENT_ID=${{ secrets.NEXT_PUBLIC_AZURE_CLIENT_ID }} \
             --build-arg NEXT_PUBLIC_AZURE_AUTHORITY=${{ secrets.NEXT_PUBLIC_AZURE_AUTHORITY }} \
             --build-arg NEXT_PUBLIC_AZURE_API_SCOPE=${{ secrets.NEXT_PUBLIC_AZURE_API_SCOPE }} \
