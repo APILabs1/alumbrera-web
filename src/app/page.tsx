@@ -18,82 +18,56 @@ export default function HomePage() {
   }, [instance, router, inProgress]);
 
   return (
-    <div
-      className="flex min-h-screen"
-      style={{ backgroundColor: "#0c1422", color: "#e9eef5", fontFamily: '-apple-system, "Segoe UI", Helvetica, Arial, sans-serif' }}
-    >
+    <div className="flex min-h-[100dvh]" style={{ backgroundColor: "#0c1422", color: "#e9eef5" }}>
+
       {/* Left panel */}
       <div
-        className="flex flex-col w-full lg:flex-none"
-        style={{
-          flex: "0 0 45%",
-          maxWidth: 860,
-          backgroundColor: "#101a2e",
-          padding: "40px 56px",
-        }}
+        className="flex flex-col w-full lg:w-[45%] lg:flex-none px-6 py-8 sm:px-10 sm:py-10 lg:px-14 lg:py-10"
+        style={{ backgroundColor: "#101a2e" }}
       >
         {/* Brand lockup */}
         <div>
           <div
+            className="text-lg leading-none"
             style={{
               fontFamily: "var(--font-archivo-black), 'Archivo Black', sans-serif",
-              fontWeight: 400,
-              fontSize: 18,
               letterSpacing: "-0.01em",
-              lineHeight: 1,
               color: "#e9eef5",
             }}
           >
             Alumbrera
           </div>
           <div
-            style={{
-              fontSize: 11,
-              textTransform: "uppercase",
-              letterSpacing: "0.07em",
-              fontWeight: 600,
-              color: "#7f8ba0",
-              marginTop: 5,
-            }}
+            className="mt-1.5 text-[11px] font-semibold uppercase tracking-widest"
+            style={{ color: "#7f8ba0" }}
           >
             una empresa Glencore
           </div>
         </div>
 
         {/* Central block */}
-        <div style={{ margin: "auto 0", maxWidth: 420 }}>
+        <div className="my-auto py-10 max-w-[420px]">
           <p
-            style={{
-              fontSize: 13,
-              color: "#7f8ba0",
-              margin: "0 0 16px",
-              letterSpacing: "0.02em",
-            }}
+            className="mb-4 text-[13px] tracking-wide"
+            style={{ color: "#7f8ba0" }}
           >
             Portal de gestión
           </p>
 
           <h1
+            className="mb-4 text-[26px] sm:text-[32px] lg:text-[38px] font-bold leading-[1.15]"
             style={{
               fontFamily: "Georgia, 'Times New Roman', serif",
-              fontWeight: 700,
-              fontSize: 38,
-              lineHeight: 1.15,
               letterSpacing: "-0.01em",
               color: "#e9eef5",
-              margin: "0 0 16px",
             }}
           >
             Iniciá sesión en tu cuenta
           </h1>
 
           <p
-            style={{
-              fontSize: 15,
-              color: "#8a99ad",
-              lineHeight: 1.5,
-              margin: "0 0 30px",
-            }}
+            className="mb-8 text-[15px] leading-relaxed"
+            style={{ color: "#8a99ad" }}
           >
             Accedé con tu cuenta organizacional de Alumbrera.
           </p>
@@ -101,42 +75,24 @@ export default function HomePage() {
           <SignInButton />
 
           {/* Separator */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 14,
-              margin: "28px 0 16px",
-            }}
-          >
-            <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,.08)" }} />
+          <div className="flex items-center gap-3.5 my-7">
+            <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,.08)" }} />
             <span
-              style={{
-                fontSize: 11.5,
-                color: "#5f6c80",
-                letterSpacing: "0.06em",
-                textTransform: "lowercase",
-                whiteSpace: "nowrap",
-              }}
+              className="text-[11.5px] tracking-widest lowercase whitespace-nowrap"
+              style={{ color: "#5f6c80" }}
             >
               autenticación segura
             </span>
-            <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,.08)" }} />
+            <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,.08)" }} />
           </div>
 
           {/* Entra ID row */}
           <div
+            className="flex items-center gap-2.5 h-[46px] px-4 text-[13px] rounded-[10px] whitespace-nowrap overflow-hidden"
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              height: 46,
-              padding: "0 16px",
               border: "1px solid rgba(255,255,255,.08)",
-              borderRadius: 10,
               background: "rgba(255,255,255,.015)",
               color: "#8a99ad",
-              fontSize: 13,
             }}
           >
             <svg
@@ -148,7 +104,7 @@ export default function HomePage() {
               strokeWidth={1.8}
               strokeLinecap="round"
               strokeLinejoin="round"
-              style={{ flexShrink: 0 }}
+              className="shrink-0"
             >
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
             </svg>
@@ -157,16 +113,13 @@ export default function HomePage() {
         </div>
 
         {/* Footer */}
-        <p style={{ marginTop: "auto", color: "#5f6c80", fontSize: 12.5 }}>
+        <p className="mt-auto text-[12.5px]" style={{ color: "#5f6c80" }}>
           © 2026 Alumbrera. Todos los derechos reservados.
         </p>
       </div>
 
       {/* Right panel — brand image */}
-      <div
-        className="hidden lg:block"
-        style={{ flex: 1, position: "relative", overflow: "hidden" }}
-      >
+      <div className="hidden lg:block flex-1 relative overflow-hidden">
         <Image
           src="/images/topo-panel.svg"
           alt=""

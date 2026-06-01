@@ -28,10 +28,10 @@ export function Navbar() {
       className="sticky top-0 z-50"
       style={{
         height: 64,
-        padding: "0 28px",
+        padding: "0 16px",
         display: "flex",
         alignItems: "center",
-        gap: 16,
+        gap: 12,
         background: "rgba(27,31,46,.82)",
         backdropFilter: "blur(10px)",
         borderBottom: "1px solid rgba(255,255,255,.08)",
@@ -52,6 +52,7 @@ export function Navbar() {
           Alumbrera
         </span>
         <span
+          className="hidden sm:block"
           style={{
             fontFamily: "var(--font-geist-sans), sans-serif",
             fontWeight: 600,
@@ -78,7 +79,7 @@ export function Navbar() {
             borderRadius: 999,
             border: "1px solid rgba(255,255,255,.08)",
             background: "rgba(255,255,255,.02)",
-            padding: "5px 12px 5px 6px",
+            padding: "5px 10px 5px 6px",
           }}
         >
           <span
@@ -100,6 +101,7 @@ export function Navbar() {
             {initials}
           </span>
           <span
+            className="hidden sm:inline"
             style={{
               fontFamily: "var(--font-geist-sans), sans-serif",
               fontWeight: 500,
@@ -145,9 +147,9 @@ function LogoutButton({ onSignOut }: { onSignOut: () => void }) {
       style={{
         display: "inline-flex",
         alignItems: "center",
-        gap: 8,
+        gap: 6,
         height: 36,
-        padding: "0 14px",
+        padding: "0 10px",
         borderRadius: 9,
         background: "transparent",
         border: "1px solid rgba(255,255,255,.13)",
@@ -157,6 +159,7 @@ function LogoutButton({ onSignOut }: { onSignOut: () => void }) {
         cursor: "pointer",
         transition: "all .18s ease",
         fontFamily: "var(--font-geist-sans), sans-serif",
+        flexShrink: 0,
       }}
     >
       <LogOut
@@ -164,7 +167,7 @@ function LogoutButton({ onSignOut }: { onSignOut: () => void }) {
         strokeWidth={1.8}
         style={{ stroke: "#9aa6b8", transition: "stroke .18s ease", flex: "none" }}
       />
-      Cerrar sesión
+      <span className="hidden sm:inline">Cerrar sesión</span>
     </button>
   );
 }

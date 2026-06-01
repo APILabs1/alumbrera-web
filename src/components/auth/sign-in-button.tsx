@@ -22,12 +22,14 @@ export function SignInButton() {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        display: "inline-flex",
+        display: "flex",
         alignItems: "center",
         justifyContent: "center",
         gap: 9,
+        width: "100%",
         height: 44,
         padding: "0 22px",
+        whiteSpace: "nowrap",
         borderRadius: 12,
         background: hovered ? "#5B8FB5" : "rgba(45,111,160,0.14)",
         color: hovered ? "#ffffff" : "#dcebf8",
