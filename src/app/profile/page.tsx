@@ -99,62 +99,64 @@ interface InfoRowProps {
 function InfoRow({ icon, label, value, mono = false, copyable = false, isLast = false }: InfoRowProps) {
   return (
     <div
+      className="flex flex-col sm:flex-row sm:items-center"
       style={{
-        display: "flex",
-        alignItems: "center",
-        gap: 16,
-        padding: "17px 0",
+        padding: "14px 0",
         borderBottom: isLast ? "none" : "1px solid rgba(255,255,255,.08)",
+        gap: 0,
       }}
     >
-      {/* Icon box */}
-      <span
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          width: 34,
-          height: 34,
-          borderRadius: 9,
-          background: "rgba(255,255,255,.03)",
-          border: "1px solid rgba(255,255,255,.08)",
-          flexShrink: 0,
-        }}
-      >
-        {icon}
-      </span>
+      {/* Icon + label row */}
+      <div className="flex items-center" style={{ gap: 16 }}>
+        <span
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: 34,
+            height: 34,
+            borderRadius: 9,
+            background: "rgba(255,255,255,.03)",
+            border: "1px solid rgba(255,255,255,.08)",
+            flexShrink: 0,
+          }}
+        >
+          {icon}
+        </span>
+        <span
+          className="sm:w-[170px] sm:flex-shrink-0"
+          style={{
+            fontFamily: "var(--font-geist-sans), sans-serif",
+            fontSize: 13,
+            color: "#9aa6b8",
+          }}
+        >
+          {label}
+        </span>
+      </div>
 
-      {/* Label */}
-      <span
-        style={{
-          width: 170,
-          flexShrink: 0,
-          fontFamily: "var(--font-geist-sans), sans-serif",
-          fontSize: 13,
-          color: "#9aa6b8",
-        }}
+      {/* Value row — indented on mobile to align with label, inline on desktop */}
+      <div
+        className="flex items-center mt-1.5 sm:mt-0 sm:flex-1 sm:min-w-0"
+        style={{ paddingLeft: 50, gap: 8 }}
+        // paddingLeft aligns with label start (icon 34px + gap 16px)
       >
-        {label}
-      </span>
-
-      {/* Value */}
-      <span
-        style={{
-          fontFamily: mono ? "var(--font-geist-mono), monospace" : "var(--font-geist-sans), sans-serif",
-          fontWeight: mono ? 400 : 500,
-          fontSize: mono ? 13 : 14.5,
-          color: mono ? "#9aa6b8" : "#eaf0f8",
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-          whiteSpace: "nowrap",
-          flex: 1,
-          minWidth: 0,
-        }}
-      >
-        {value}
-      </span>
-
-      {copyable && <CopyChip text={value} />}
+        <span
+          className="sm:flex-1 sm:min-w-0"
+          style={{
+            fontFamily: mono ? "var(--font-geist-mono), monospace" : "var(--font-geist-sans), sans-serif",
+            fontWeight: mono ? 400 : 500,
+            fontSize: mono ? 12 : 14,
+            color: mono ? "#9aa6b8" : "#eaf0f8",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {value}
+        </span>
+        {copyable && <CopyChip text={value} />}
+      </div>
     </div>
   );
 }
@@ -331,16 +333,10 @@ function ProfileContent() {
   }, [instance, inProgress, fetchKey]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <div style={{ minHeight: "100vh", background: "#192437", display: "flex", flexDirection: "column" }}>
+    <div className="flex flex-col min-h-[100dvh]" style={{ background: "#192437" }}>
       <Navbar />
 
-      <main
-        style={{
-          flex: 1,
-          padding: 34,
-          overflowY: "auto",
-        }}
-      >
+      <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-[34px]">
         <div style={{ maxWidth: 860, margin: "0 auto" }}>
 
           {loading ? (
@@ -388,13 +384,7 @@ function ProfileContent() {
 
                 {/* Inner content */}
                 <div
-                  style={{
-                    position: "relative",
-                    padding: "30px 32px 28px",
-                    display: "flex",
-                    alignItems: "flex-end",
-                    gap: 22,
-                  }}
+                  className="relative flex flex-col items-center gap-3 p-6 sm:flex-row sm:items-end sm:gap-[22px] sm:px-8 sm:py-[30px]"
                 >
                   {/* Large avatar */}
                   <div
@@ -420,7 +410,7 @@ function ProfileContent() {
                   </div>
 
                   {/* Identity */}
-                  <div>
+                  <div className="text-center sm:text-left sm:flex-1">
                     <h1
                       style={{
                         margin: 0,
@@ -448,7 +438,7 @@ function ProfileContent() {
 
                   {/* Login count badge */}
                   {profile && (
-                    <div style={{ marginLeft: "auto" }}>
+                    <div className="sm:ml-auto">
                       <span
                         style={{
                           display: "inline-flex",
