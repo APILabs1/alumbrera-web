@@ -1,26 +1,44 @@
-name: CD
+name: CI/CD — alumbrera-web
 
 on:
-  workflow_run:
-    workflows: [CI]
-    types: [completed]
-    branches: [dev]
+  push:
+    branches:
+      - dev
+    tags:
+      - 'v*'
+
+env:
+  ACR: acralumbrera.azurecr.io
+  IMAGE_NAME: alumbrera-web
 
 jobs:
-  publish:
-    name: Build and push to ACR
+  ci:
+    name: Build & Test
     runs-on: ubuntu-latest
-    if: github.event.workflow_run.conclusion == 'success'
+
     permissions:
       id-token: write
       contents: read
-    outputs:
-      image: ${{ steps.push.outputs.image }}
 
     steps:
       - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
         with:
-          ref: ${{ github.event.workflow_run.head_sha }}
+          node-version: '20'
+
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Build
+        run: pnpm build
 
       - name: Login to Azure (OIDC)
         uses: azure/login@v2
@@ -29,31 +47,45 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Build and push image
-        id: push
+      - name: Login to ACR
+        run: az acr login --name acralumbrera
+
+      - name: Build & Push Docker image
         run: |
-          SHA=${{ github.event.workflow_run.head_sha }}
-          IMAGE=acralumbrera.azurecr.io/alumbrera-web:$SHA
-          az acr login --name acralumbrera
-          docker build -t $IMAGE \
+          docker build --no-cache -t $ACR/$IMAGE_NAME:${{ github.sha }} \
             --build-arg NEXT_PUBLIC_AZURE_CLIENT_ID=${{ secrets.NEXT_PUBLIC_AZURE_CLIENT_ID }} \
             --build-arg NEXT_PUBLIC_AZURE_AUTHORITY=${{ secrets.NEXT_PUBLIC_AZURE_AUTHORITY }} \
             --build-arg NEXT_PUBLIC_AZURE_API_SCOPE=${{ secrets.NEXT_PUBLIC_AZURE_API_SCOPE }} \
             --build-arg NEXT_PUBLIC_API_BASE_URL=${{ vars.NEXT_PUBLIC_API_BASE_URL }} \
             .
-          docker push $IMAGE
-          echo "image=$IMAGE" >> $GITHUB_OUTPUT
+          docker push $ACR/$IMAGE_NAME:${{ github.sha }}
 
-  deploy:
-    name: Deploy to dev
-    needs: publish
+  deploy-dev:
+    name: Deploy → dev
+    needs: ci
+    if: github.ref == 'refs/heads/dev'
     permissions:
       id-token: write
       contents: read
     uses: APILabs1/alumbrera-infra/.github/workflows/deploy.yml@main
     with:
       environment: dev
-      image: ${{ needs.publish.outputs.image }}
+      image: acralumbrera.azurecr.io/alumbrera-web:${{ github.sha }}
       app_name: ca-alumbrera-web-dev
+      resource_group: rg-alumbrera-prod
+    secrets: inherit
+
+  deploy-prod:
+    name: Deploy → prod
+    needs: ci
+    if: startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      id-token: write
+      contents: read
+    uses: APILabs1/alumbrera-infra/.github/workflows/deploy.yml@main
+    with:
+      environment: prod
+      image: acralumbrera.azurecr.io/alumbrera-web:${{ github.sha }}
+      app_name: ca-alumbrera-web-prod
       resource_group: rg-alumbrera-prod
     secrets: inherit
